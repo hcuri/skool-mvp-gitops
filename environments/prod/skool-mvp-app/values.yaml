@@ -1,0 +1,24 @@
+# Reference production-style values (not applied yet)
+replicaCount: 3
+
+namespace: apps
+
+image:
+  repository: hcuri/skool-mvp-app
+  tag: prod
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+
+env:
+  logLevel: info
+  databaseSecretName: skool-mvp-db
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    memory: 256Mi

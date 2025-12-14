@@ -1,0 +1,23 @@
+replicaCount: 2
+
+namespace: apps
+
+image:
+  repository: hcuri/skool-mvp-app
+  tag: dev3
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+
+env:
+  logLevel: info
+  databaseSecretName: skool-mvp-db
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 128Mi
