@@ -7,13 +7,16 @@ metadata:
     app: skool-mvp-app
 spec:
   project: default
-  source:
-    repoURL: https://github.com/hcuri/skool-mvp-app.git
-    targetRevision: main
-    path: charts/skool-mvp-app
-    helm:
-      valueFiles:
-        - ../../environments/dev/skool-mvp-app/values.yaml
+  sources:
+    - repoURL: https://github.com/hcuri/skool-mvp-app.git
+      targetRevision: main
+      path: charts/skool-mvp-app
+      helm:
+        valueFiles:
+          - $skool-mvp-gitops/environments/dev/skool-mvp-app/values.yaml
+    - repoURL: https://github.com/hcuri/skool-mvp-gitops.git
+      targetRevision: main
+      ref: skool-mvp-gitops
   destination:
     server: https://kubernetes.default.svc
     namespace: apps
