@@ -1,7 +1,5 @@
 replicaCount: 2
 
-namespace: apps
-
 image:
   repository: hcuri/skool-mvp-app
   tag: dev3

@@ -1,8 +1,6 @@
 # Reference production-style values (not applied yet)
 replicaCount: 3
 
-namespace: apps
-
 image:
   repository: hcuri/skool-mvp-app
   tag: prod
