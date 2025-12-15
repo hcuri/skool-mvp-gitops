@@ -1,19 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: skool-mvp-app
+  name: skool-mvp-api
   namespace: argocd
   labels:
-    app: skool-mvp-app
+    app: skool-mvp-api
 spec:
   project: default
   sources:
     - repoURL: https://github.com/hcuri/skool-mvp-app.git
       targetRevision: main
-      path: charts/skool-mvp-app
+      path: charts/skool-mvp-api
       helm:
         valueFiles:
-          - $skool-mvp-gitops/environments/dev/skool-mvp-app/values.yaml
+          - $skool-mvp-gitops/environments/dev/skool-mvp-api/values.yaml
     - repoURL: https://github.com/hcuri/skool-mvp-gitops.git
       targetRevision: main
       ref: skool-mvp-gitops

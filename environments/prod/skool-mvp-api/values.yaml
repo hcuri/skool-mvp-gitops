@@ -1,8 +1,9 @@
-replicaCount: 2
+# Reference production-style values (not applied yet)
+replicaCount: 3
 
 image:
-  repository: hcuri/skool-mvp-app
-  tag: d319d06
+  repository: hcuri/skool-mvp-api
+  tag: prod
   pullPolicy: IfNotPresent
 
 service:
@@ -15,7 +16,7 @@ env:
 
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 200m
+    memory: 256Mi
   limits:
-    memory: 128Mi
+    memory: 256Mi
