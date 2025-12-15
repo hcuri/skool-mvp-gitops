@@ -4,10 +4,17 @@ Built by **Hector Curi** as a personal project to demonstrate end-to-end DevOps/
 
 ArgoCD Applications and environment-specific Helm values for deploying the Skool MVP API to EKS using GitOps.
 
-## Role in the Skool MVP
-- Contains ArgoCD `Application` manifests (e.g., `applications/skool-mvp-api.yaml`).
-- Contains env-specific values under `environments/dev/skool-mvp-api/values.yaml` (and a prod reference).
-- App code + chart are in `skool-mvp-app` (API backend); AWS infra (EKS, RDS, VPC) is in `skool-mvp-infra`.
+## How this fits into the Skool MVP
+- ArgoCD Applications and environment values for the Skool MVP API backend
+- API code + chart are in `skool-mvp-api` (https://github.com/hcuri/skool-mvp-api)
+- AWS infra (EKS, RDS, VPC) is in `skool-mvp-infra` (https://github.com/hcuri/skool-mvp-infra).
+
+## Layout
+- `applications/`
+  - `skool-mvp-api.yaml` – ArgoCD Application pointing to the API chart.
+- `environments/`
+  - `dev/skool-mvp-api/values.yaml` – Dev values (image tag, replicas, service type, env secret name).
+  - `prod/skool-mvp-api/values.yaml` – Reference prod-style values (not deployed yet).
 
 ## How ArgoCD uses this repo
 - Multi-repo setup: ArgoCD pulls the chart from `skool-mvp-app` and the values from this repo using a second source (`$skool-mvp-gitops/.../values.yaml`).
@@ -24,13 +31,9 @@ ArgoCD Applications and environment-specific Helm values for deploying the Skool
    - Destination: same cluster, namespace `apps` (created if missing).
 
 ## Workflow example
-1) Code change in `skool-mvp-app` → build & push image tagged with Git SHA (repo `hcuri/skool-mvp-api`).
+1) Code change in `skool-mvp-api` → build & push image tagged with Git SHA (repo `hcuri/skool-mvp-api`).
 2) Update `environments/dev/skool-mvp-api/values.yaml` `image.tag` to that SHA and commit/push to this repo.
 3) ArgoCD syncs and deploys to the `apps` namespace in EKS.
 
 ## Security / secrets
 - Secrets are not stored here. `DATABASE_URL` and other sensitive data live in Kubernetes Secrets created separately (e.g., `skool-mvp-db`).
-
-## License & attribution
-- Licensed under the MIT License (see `LICENSE`).
-- You are welcome to copy/adapt the code. If you reuse it, please preserve the original copyright and license notices so attribution to the author, Hector Curi, is retained.

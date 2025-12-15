@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: https://github.com/hcuri/skool-mvp-app.git
+    - repoURL: https://github.com/hcuri/skool-mvp-api.git
       targetRevision: main
       path: charts/skool-mvp-api
       helm:
