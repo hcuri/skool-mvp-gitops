@@ -13,6 +13,9 @@ env:
   logLevel: info
   databaseSecretName: skool-mvp-db
 
+servicemonitor:
+  enabled: true # Prometheus (kube-prometheus-stack) scrapes /metrics via ServiceMonitor
+
 resources:
   requests:
     cpu: 100m

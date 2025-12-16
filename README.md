@@ -17,7 +17,7 @@ ArgoCD Applications and environment-specific Helm values for deploying the Skool
   - `prod/skool-mvp-api/values.yaml` – Reference prod-style values (not deployed yet).
 
 ## How ArgoCD uses this repo
-- Multi-repo setup: ArgoCD pulls the chart from `skool-mvp-app` and the values from this repo using a second source (`$skool-mvp-gitops/.../values.yaml`).
+- Multi-repo setup: ArgoCD pulls the chart from `skool-mvp-api` and the values from this repo using a second source (`$skool-mvp-gitops/.../values.yaml`).
 - Updating the image tag in the values file and committing here causes ArgoCD to roll out a new version (images are tagged with Git SHAs).
 
 ## Deploying with ArgoCD (manual apply)
@@ -71,6 +71,11 @@ Rollback: change `activeColor` back to `blue` and let ArgoCD sync.
 - Use an ingress/mesh that supports weighting (NGINX Ingress, AWS ALB Ingress Controller, Istio/Linkerd).
 - Manage Rollout spec and image tags via GitOps; ArgoCD syncs desired state; Rollouts controller shifts traffic.
 For this MVP, we stick with rolling updates but can add blue/green or canary incrementally as needed.
+
+## Observability
+- ArgoCD deploys `kube-prometheus-stack` (Prometheus, Alertmanager, Grafana) via `applications/observability.yaml` into the `observability` namespace.
+- `skool-mvp-api` exposes `/metrics` (Prometheus format) and is scraped via a ServiceMonitor (enabled in `environments/dev/skool-mvp-api/values.yaml`).
+- Grafana (exposed as a LoadBalancer for the MVP) can be used to build a simple RED dashboard (requests, errors, latency) for the API.
 
 ## CI/CD note
 - API repo (`skool-mvp-api`): GitHub Actions builds/pushes `hcuri/skool-mvp-api:${{ github.sha }}` on `main` and opens a PR here to bump the dev image tag.
