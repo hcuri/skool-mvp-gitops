@@ -1,18 +1,14 @@
 replicaCount: 2
-
 image:
   repository: hcuri/skool-mvp-api
-  tag: de86fdb
+  tag: 31eb845
   pullPolicy: IfNotPresent
-
 service:
   type: LoadBalancer
   port: 80
-
 env:
   logLevel: info
   databaseSecretName: skool-mvp-db
-
 resources:
   requests:
     cpu: 100m
