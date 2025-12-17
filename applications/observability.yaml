@@ -18,6 +18,16 @@ spec:
         prometheus:
           service:
             type: ClusterIP
+          prometheusSpec:
+            serviceMonitorSelector: {}
+            serviceMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorNamespaceSelector: {}
+            podMonitorSelector: {}
+            podMonitorSelectorNilUsesHelmValues: false
+            podMonitorNamespaceSelector: {}
+            probeSelector: {}
+            probeSelectorNilUsesHelmValues: false
+            probeNamespaceSelector: {}
         grafana:
           enabled: true
           service:
