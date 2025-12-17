@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: hcuri/skool-mvp-api
-  tag: 364e085
+  tag: "78f824c"
   pullPolicy: IfNotPresent
 
 service:
