@@ -7,33 +7,40 @@ metadata:
     app: skool-mvp-observability
 spec:
   project: default
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 58.4.0
-    helm:
-      values: |
-        global:
-          scrape_interval: 15s
-        prometheus:
-          service:
-            type: ClusterIP
-          prometheusSpec:
-            serviceMonitorSelector: {}
-            serviceMonitorSelectorNilUsesHelmValues: false
-            serviceMonitorNamespaceSelector: {}
-            podMonitorSelector: {}
-            podMonitorSelectorNilUsesHelmValues: false
-            podMonitorNamespaceSelector: {}
-            probeSelector: {}
-            probeSelectorNilUsesHelmValues: false
-            probeNamespaceSelector: {}
-        grafana:
-          enabled: true
-          service:
-            type: LoadBalancer
-        alertmanager:
-          enabled: true
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 58.4.0
+      helm:
+        values: |
+          global:
+            scrape_interval: 15s
+          prometheus:
+            service:
+              type: ClusterIP
+            prometheusSpec:
+              serviceMonitorSelector: {}
+              serviceMonitorSelectorNilUsesHelmValues: false
+              serviceMonitorNamespaceSelector: {}
+              podMonitorSelector: {}
+              podMonitorSelectorNilUsesHelmValues: false
+              podMonitorNamespaceSelector: {}
+              probeSelector: {}
+              probeSelectorNilUsesHelmValues: false
+              probeNamespaceSelector: {}
+          grafana:
+            enabled: true
+            service:
+              type: LoadBalancer
+            sidecar:
+              dashboards:
+                enabled: true
+                label: grafana_dashboard
+          alertmanager:
+            enabled: true
+    - repoURL: https://github.com/hcuri/skool-mvp-gitops.git
+      targetRevision: main
+      path: environments/dev/observability
   destination:
     server: https://kubernetes.default.svc
     namespace: observability
