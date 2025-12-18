@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: hcuri/skool-mvp-web
-  tag: "latest"
+  tag: "8cb4450"
   pullPolicy: IfNotPresent
 
 service:
