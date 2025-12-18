@@ -15,6 +15,7 @@ metadata:
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:532639070761:certificate/fa8f4e89-f99e-4071-a177-08724a14abb9
     alb.ingress.kubernetes.io/healthcheck-path: /api/health
 spec:
+  ingressClassName: alb
   rules:
     - host: grafana.skoo1.com
       http:
@@ -26,4 +27,3 @@ spec:
                 name: skool-mvp-observability-grafana
                 port:
                   number: 80
-

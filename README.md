@@ -12,9 +12,12 @@ ArgoCD Applications and environment-specific Helm values for deploying the Skool
 ## Layout
 - `applications/`
   - `skool-mvp-api.yaml` – ArgoCD Application pointing to the API chart.
-- `environments/`
+  - `aws-load-balancer-controller.yaml` – Installs AWS Load Balancer Controller (ALB ingress).
+  - `ingress.yaml` – Applies dev Ingress manifests (host-based routing + TLS).
+  - `environments/`
   - `dev/skool-mvp-api/values.yaml` – Dev values (image tag, replicas, service type, env secret name).
   - `prod/skool-mvp-api/values.yaml` – Reference prod-style values (not deployed yet).
+  - `dev/ingress/` – Ingress manifests for `api.skoo1.com` and `grafana.skoo1.com`.
 
 ## How ArgoCD uses this repo
 - Multi-repo setup: ArgoCD pulls the chart from `skool-mvp-api` and the values from this repo using a second source (`$skool-mvp-gitops/.../values.yaml`).
@@ -75,7 +78,30 @@ For this MVP, we stick with rolling updates but can add blue/green or canary inc
 ## Observability
 - ArgoCD deploys `kube-prometheus-stack` (Prometheus, Alertmanager, Grafana) via `applications/observability.yaml` into the `observability` namespace.
 - `skool-mvp-api` exposes `/metrics` (Prometheus format) and is scraped via a ServiceMonitor (enabled in `environments/dev/skool-mvp-api/values.yaml`).
-- Grafana (exposed as a LoadBalancer for the MVP) can be used to build a simple RED dashboard (requests, errors, latency) for the API.
+- Grafana is exposed via ALB Ingress at `https://grafana.skoo1.com` (Service is `ClusterIP`).
+
+## Ingress + TLS (AWS-native)
+The dev environment uses an AWS-native ingress setup:
+
+- **Ingress controller**: AWS Load Balancer Controller (installed via `applications/aws-load-balancer-controller.yaml`).
+- **Load balancer**: a single internet-facing **ALB** shared via Ingress group `skool-mvp-dev`.
+- **TLS termination**: ALB terminates TLS using an ACM certificate in `us-west-2`.
+- **HTTP→HTTPS**: handled at ALB using `alb.ingress.kubernetes.io/ssl-redirect: "443"`.
+- **Host-based routing**:
+  - `api.skoo1.com` → `skool-mvp-api` (namespace `apps`)
+  - `grafana.skoo1.com` → Grafana (namespace `observability`)
+- **ArgoCD**: intentionally not exposed publicly (use port-forward only).
+
+### DNS (Cloudflare)
+The domain `skoo1.com` is hosted in Cloudflare DNS for this demo.
+
+- ACM DNS validation records are created **manually** in Cloudflare based on Terraform outputs from `skool-mvp-infra`.
+- Once the ALB exists, create **DNS-only (grey cloud)** CNAMEs in Cloudflare:
+  - `api.skoo1.com` → `<alb-dns-name>`
+  - `grafana.skoo1.com` → `<alb-dns-name>`
+  - (later) `web.skoo1.com` → `<alb-dns-name>`
+
+Important: keep these records **DNS-only** so TLS terminates at the ALB using ACM (not at Cloudflare).
 
 ## CI/CD note
 - API repo (`skool-mvp-api`): GitHub Actions builds/pushes `hcuri/skool-mvp-api:${{ github.sha }}` on `main` and opens a PR here to bump the dev image tag.
