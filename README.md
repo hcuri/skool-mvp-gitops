@@ -92,6 +92,8 @@ The dev environment uses an AWS-native ingress setup:
   - `api.skoo1.com` → `skool-mvp-api` (namespace `apps`)
   - `grafana.skoo1.com` → Grafana (namespace `observability`)
   - `web.skoo1.com` → `skool-mvp-web` (and selected API paths routed to the API service to avoid CORS)
+- **Canonical host redirects**:
+  - `skoo1.com` and `www.skoo1.com` redirect (301) to `https://web.skoo1.com` at the ALB.
 - **ArgoCD**: intentionally not exposed publicly (use port-forward only).
 
 ### DNS (Cloudflare)
