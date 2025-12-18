@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: skool-mvp-grafana
+  namespace: observability
+  labels:
+    app: skool-mvp-grafana
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: skool-mvp-dev
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:532639070761:certificate/fa8f4e89-f99e-4071-a177-08724a14abb9
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
+spec:
+  rules:
+    - host: grafana.skoo1.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: skool-mvp-observability-grafana
+                port:
+                  number: 80
+

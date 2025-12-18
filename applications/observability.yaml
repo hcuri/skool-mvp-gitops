@@ -31,7 +31,7 @@ spec:
           grafana:
             enabled: true
             service:
-              type: LoadBalancer
+              type: ClusterIP
             sidecar:
               dashboards:
                 enabled: true
