@@ -6,12 +6,8 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
-
-api:
-  # Replace with the API LoadBalancer DNS name when known
-  baseUrl: "http://a1d107c943b394481a34b472d9a026cc-596698236.us-west-2.elb.amazonaws.com"
 
 resources:
   requests:
