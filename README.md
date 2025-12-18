@@ -12,10 +12,12 @@ ArgoCD Applications and environment-specific Helm values for deploying the Skool
 ## Layout
 - `applications/`
   - `skool-mvp-api.yaml` – ArgoCD Application pointing to the API chart.
+  - `skool-mvp-web.yaml` – ArgoCD Application pointing to the web chart.
   - `aws-load-balancer-controller.yaml` – Installs AWS Load Balancer Controller (ALB ingress).
   - `ingress.yaml` – Applies dev Ingress manifests (host-based routing + TLS).
 - `environments/`
   - `dev/skool-mvp-api/values.yaml` – Dev values (image tag, replicas, service type, env secret name).
+  - `dev/skool-mvp-web/values.yaml` – Dev values for the web app (image tag, replicas, service type, resources).
   - `dev/observability/` – Dev Grafana dashboards (ConfigMaps) loaded by the Grafana sidecar.
   - `dev/ingress/` – Ingress manifests for `api.skoo1.com` and `grafana.skoo1.com` (and later `web.skoo1.com`).
   - `prod/skool-mvp-api/values.yaml` – Reference prod-style values (not deployed yet).
@@ -40,7 +42,7 @@ ArgoCD Applications and environment-specific Helm values for deploying the Skool
 3) ArgoCD syncs and deploys to the `apps` namespace in EKS.
 
 ## Deployment strategies
-Right now `skool-mvp-api` is deployed as a standard Kubernetes Deployment and exposed via a Service of type `LoadBalancer`. ArgoCD applies the rendered Helm manifests, and Kubernetes handles the rollout strategy.
+Right now `skool-mvp-api` is deployed as a standard Kubernetes Deployment and exposed via an AWS ALB Ingress (Service is `ClusterIP`). ArgoCD applies the rendered Helm manifests, and Kubernetes handles the rollout strategy.
 
 ### Current strategy – Rolling updates (default)
 
