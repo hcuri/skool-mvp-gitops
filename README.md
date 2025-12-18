@@ -14,10 +14,11 @@ ArgoCD Applications and environment-specific Helm values for deploying the Skool
   - `skool-mvp-api.yaml` – ArgoCD Application pointing to the API chart.
   - `aws-load-balancer-controller.yaml` – Installs AWS Load Balancer Controller (ALB ingress).
   - `ingress.yaml` – Applies dev Ingress manifests (host-based routing + TLS).
-  - `environments/`
+- `environments/`
   - `dev/skool-mvp-api/values.yaml` – Dev values (image tag, replicas, service type, env secret name).
+  - `dev/observability/` – Dev Grafana dashboards (ConfigMaps) loaded by the Grafana sidecar.
+  - `dev/ingress/` – Ingress manifests for `api.skoo1.com` and `grafana.skoo1.com` (and later `web.skoo1.com`).
   - `prod/skool-mvp-api/values.yaml` – Reference prod-style values (not deployed yet).
-  - `dev/ingress/` – Ingress manifests for `api.skoo1.com` and `grafana.skoo1.com`.
 
 ## How ArgoCD uses this repo
 - Multi-repo setup: ArgoCD pulls the chart from `skool-mvp-api` and the values from this repo using a second source (`$skool-mvp-gitops/.../values.yaml`).
@@ -90,6 +91,7 @@ The dev environment uses an AWS-native ingress setup:
 - **Host-based routing**:
   - `api.skoo1.com` → `skool-mvp-api` (namespace `apps`)
   - `grafana.skoo1.com` → Grafana (namespace `observability`)
+  - `web.skoo1.com` → `skool-mvp-web` (planned; once frontend is deployed)
 - **ArgoCD**: intentionally not exposed publicly (use port-forward only).
 
 ### DNS (Cloudflare)
